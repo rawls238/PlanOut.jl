@@ -1,5 +1,10 @@
 using PlanOut
 using Base.Test
 
-# write your own tests here
-@test 1 == 1
+tests = ["core_ops"]
+
+for t in tests
+    fp = joinpath(dirname(@__FILE__), "test_$t.jl")
+    println("$fp ...")
+    include(fp)
+end

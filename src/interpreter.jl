@@ -1,4 +1,4 @@
-type Interpreter
+type Interpreter <: AbstractPlanOutMapper
     serialization
     inputs::Dict
     env::Assignment
@@ -33,6 +33,10 @@ function str_to_op(s::AbstractString)
   end
   return s
 end
+
+setindex!(i::Interpreter, value, key) = setindex!(i.env, value, key)
+getindex(i::Interpreter, key) = getindex!(i.env, key)
+delete!(i::Interpreter, key) = delete!(i.env, key)
 
 function get_params(i::Interpreter)
   if !i.evaluated

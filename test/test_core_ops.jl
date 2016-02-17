@@ -96,4 +96,69 @@ mod = run_config_single(Dict("op" => "%", "left" => 11, "right" => 3))
 div = run_config_single(Dict("op" => "/", "left" => 3, "right" => 4))
 @test div == 0.75
 
-round = run_config_single(Dict("op" => "round"))
+round = run_config_single(Dict("op" => "round", "value" => 3.1))
+@test round == 3.0
+
+arr = [0, 1, 2, 3]
+length_test = run_config_single(Dict("op" => "length", "value" => arr))
+@test length(arr) == length_test
+
+length_test = run_config_single(Dict("op" => "length", "value" => []))
+@test 0 == 0
+
+not_test = run_config_single(Dict("op" => "not", "value" => 0))
+@test not_test == true
+
+not_test = run_config_single(Dict("op" => "not", "value" => false))
+@test not_test == true
+
+not_test = run_config_single(Dict("op" => "not", "value" => 1))
+@test not_test == false
+
+not_test = run_config_single(Dict("op" => "not", "value" => true))
+@test not_test == false
+
+array_literal = [10, 20, 30]
+dict_literal = Dict("a" => 42, "b" => 43)
+x = run_config_single(Dict("op" => "index", "index" => 0, "base" => array_literal))
+@test x == 10
+
+x = run_config_single(Dict("op" => "index", "index" => 2, "base" => array_literal))
+@test x == 30
+
+x = run_config_single(Dict("op" => "index", "index" => "a", "base" => dict_literal))
+@test x == 42
+
+x = run_config_single(Dict("op" => "index", "index" => 6, "base" => array_literal))
+@test isequal(x, Nullable())
+
+x = run_config_single(Dict("op" => "index", "index" => "c", "base" => dict_literal))
+@test isequal(x, Nullable())
+
+x = run_config_single(Dict("op" => "index", "index" => 2, "base" => Dict("op" => "array", "values" => array_literal)))
+@test x == 30
+
+function return_runner(val)
+  config = Dict("op" => "seq", "seq" =>
+              [Dict("op" => "set", "var" => "x", "value" => 2),
+               Dict("op" => "return", "value" => val),
+               Dict("op" => "set", "var" => "y", "value" => 4)]
+           )
+  Interpreter(config, "test_salt")
+end
+
+i = return_runner(true)
+@test getindex(get_params(i), "x") == 2
+@test i.in_experiment == true
+
+i = return_runner(42)
+@test getindex(get_params(i), "x") == 2
+@test i.in_experiment == true
+
+i = return_runner(false)
+@test getindex(get_params(i), "x") == 2
+@test i.in_experiment == false
+
+i = return_runner(0)
+@test getindex(get_params(i), "x") == 2
+@test i.in_experiment == false

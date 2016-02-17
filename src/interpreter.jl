@@ -28,13 +28,21 @@ function str_to_op(s::AbstractString)
     return AbstractString("div")
   elseif s == AbstractString("length")
     return AbstractString("len")
+  elseif s == AbstractString("return")
+    return AbstractString("ret")
   end
   return s
 end
 
 function get_params(i::Interpreter)
   if !i.evaluated
-    evaluate(i, i.serialization)
+    try
+      evaluate(i, i.serialization)
+    catch e
+      if isa(e, StopPlanOutException)
+        i.in_experiment = e.in_experiment
+      end
+    end
     i.evaluated = true
   end
   return i.env

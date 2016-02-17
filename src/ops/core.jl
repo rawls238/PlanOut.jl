@@ -213,3 +213,26 @@ end
 len(args::Dict) = Length(args)
 
 execute(op::Length, i::Interpreter, value) = Base.length(value)
+
+type Index <: AbstractPlanOutOpSimple
+  args::Dict
+end
+index(args::Dict) = Index(args)
+
+modifyIndex(a::Any) = a
+modifyIndex(a::Number) = a + 1 # because other languages start with index = 0
+function simpleExecute(op::Index, i::Interpreter)
+  base = getArgIndexish(op, "base")
+  index = modifyIndex(getArgMixed(op, "index"))
+  Base.get(base, index, Nullable())
+end
+
+type Return <: AbstractPlanOutOp
+  args::Dict
+end
+ret(args::Dict) = Return(args)
+function execute(op::Return, i::Interpreter)
+  value = evaluate(i, getArgMixed(op, "value"))
+  in_experiment = value > 0
+  throw(StopPlanOutException(in_experiment))
+end

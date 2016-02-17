@@ -33,3 +33,7 @@ simpleExecute(op::AbstractPlanOutOpUnary, i::Interpreter) = execute(op, i, getAr
 
 abstract AbstractPlanOutOpCommutative <: AbstractPlanOutOpSimple
 simpleExecute(op::AbstractPlanOutOpCommutative, i::Interpreter) = execute(op, i, getArgList(op, "values"))
+
+type StopPlanOutException <: Exception
+  in_experiment::Bool
+end

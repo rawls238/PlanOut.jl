@@ -1,11 +1,6 @@
-This package was written by Guy Aridor, original license for PlanOut software:
-
-
 BSD License
 
-For PlanOut software
-
-Copyright (c) 2014, Facebook, Inc. All rights reserved.
+Copyright (c) 2016, Guy Aridor All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:

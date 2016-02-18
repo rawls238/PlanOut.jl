@@ -1,5 +1,5 @@
 type Interpreter <: AbstractPlanOutMapper
-    serialization
+    serialization::Dict
     inputs::Dict
     env::Assignment
     salt::AbstractString
@@ -8,10 +8,10 @@ type Interpreter <: AbstractPlanOutMapper
 end
 
 default_salt = "global_salt"
-Interpreter(serialization) = Interpreter(serialization, Dict(), Assignment(default_salt), default_salt, false, false)
-Interpreter(serialization, inputs::Dict) = Interpreter(serialization, inputs, Assignment(default_salt), default_salt, false, false)
-Interpreter(serialization, salt::AbstractString) = Interpreter(serialization, Dict(), Assignment(salt), salt, false, false)
-Interpreter(serialization, salt::AbstractString, inputs::Dict) = Interpreter(serialization, inputs, Assignment(salt), salt, false, false)
+Interpreter(serialization::Dict) = Interpreter(serialization, Dict(), Assignment(default_salt), default_salt, false, false)
+Interpreter(serialization::Dict, inputs::Dict) = Interpreter(serialization, inputs, Assignment(default_salt), default_salt, false, false)
+Interpreter(serialization::Dict, salt::AbstractString) = Interpreter(serialization, Dict(), Assignment(salt), salt, false, false)
+Interpreter(serialization::Dict, salt::AbstractString, inputs::Dict) = Interpreter(serialization, inputs, Assignment(salt), salt, false, false)
 
 function str_to_op(s::AbstractString)
   if s == AbstractString("<")

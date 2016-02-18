@@ -1,7 +1,7 @@
 using PlanOut
 using Base.Test
 
-tests = ["core_ops"]
+tests = ["random_ops"]
 
 for t in tests
     fp = joinpath(dirname(@__FILE__), "test_$t.jl")

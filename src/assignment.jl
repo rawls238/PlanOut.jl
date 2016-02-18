@@ -1,7 +1,6 @@
+abstract AbstractPlanOutMapper
 
-## todo: have this extend the Associative type...have no patience to deal with the types currently
-
-type Assignment
+type Assignment <: AbstractPlanOutMapper
     salt::AbstractString
     overrides::Dict
     data::Dict
@@ -10,8 +9,8 @@ end
 Assignment(salt::AbstractString) = Assignment(salt, Dict{AbstractString, Any}())
 Assignment(salt::AbstractString, overrides::Dict) = Assignment(salt, copy(overrides), copy(overrides))
 
-function setindex!(a::Assignment, name, value)
-    setindex!(a.data, value, name)
+function setindex!(a::Assignment, value, name)
+    setindex!(a.data, getValue(a, value, name), name)
 end
 
 function setsalt!(a::Assignment, val)
